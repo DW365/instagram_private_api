@@ -30,7 +30,7 @@ from .errors import (
 )
 try:  # Python 3:
     # Not a no-op, we're adding this to the namespace so it can be imported.
-    ConnectionError = ConnectionError       # pylint: disable=redefined-builtin
+    ConnectionError = ConnectionError
 except NameError:  # Python 2:
     class ConnectionError(Exception):
         pass
@@ -158,13 +158,7 @@ class Client(AccountsEndpointsMixin, DiscoverEndpointsMixin, FeedEndpointsMixin,
         proxy_handler = None
         proxy = kwargs.pop('proxy', None)
         if proxy:
-            warnings.warn('Proxy support is alpha.', UserWarning)
-            parsed_url = compat_urllib_parse_urlparse(proxy)
-            if parsed_url.netloc and parsed_url.scheme:
-                proxy_address = '{0!s}://{1!s}'.format(parsed_url.scheme, parsed_url.netloc)
-                proxy_handler = compat_urllib_request.ProxyHandler({'https': proxy_address})
-            else:
-                raise ValueError('Invalid proxy argument: {0!s}'.format(proxy))
+            proxy_handler = compat_urllib_request.ProxyHandler(proxy)
         handlers = []
         if proxy_handler:
             handlers.append(proxy_handler)
